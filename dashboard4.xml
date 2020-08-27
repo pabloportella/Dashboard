@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="Arrecadação ITBI" />
+  <DataSources>
+    <SqlDataSource Name="E&amp;L TRB" ComponentName="sqlDataSource1" DataProcessingMode="Client">
+      <Connection Name="connection" ConnectionString="XpoProvider=Postgres;Server=192.168.7.7;Port=5432;Database=eldados_tribu;User Id=postgres;Password=PnCdEL" />
+      <Query Type="CustomSqlQuery" Name="CustomSqlQuery">
+        <Sql>select 
+"vw_tr_arrecacao_itbi_perido"."datacredito",
+TO_ASCII("vw_tr_arrecacao_itbi_perido"."tributo") AS "tributo",
+cast("vw_tr_arrecacao_itbi_perido"."valor" as numeric(25,2)) as "valor"
+from "vw_tr_arrecacao_itbi_perido" "vw_tr_arrecacao_itbi_perido"</Sql>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <Pivot ComponentName="pivotDashboardItem1" Name="ITBI por Ano" DataSource="sqlDataSource1" DataMember="CustomSqlQuery">
+      <DataItems>
+        <Measure DataMember="valor" DefaultId="DataItem0">
+          <NumericFormat FormatType="Currency" CurrencyCultureName="es-BR" />
+        </Measure>
+        <Dimension DataMember="tributo" DefaultId="DataItem1" />
+        <Dimension DataMember="datacredito" DefaultId="DataItem2" />
+      </DataItems>
+      <Columns>
+        <Column DefaultId="DataItem1" />
+      </Columns>
+      <Rows>
+        <Row DefaultId="DataItem2" />
+      </Rows>
+      <Values>
+        <Value DefaultId="DataItem0" />
+      </Values>
+      <AutoExpandColumnGroups>true</AutoExpandColumnGroups>
+      <AutoExpandRowGroups>true</AutoExpandRowGroups>
+      <LayoutType>Tabular</LayoutType>
+    </Pivot>
+    <DateFilter ComponentName="dateFilterDashboardItem1" Name="Data" DataSource="sqlDataSource1" DataMember="CustomSqlQuery">
+      <DataItems>
+        <Dimension DataMember="datacredito" DateTimeGroupInterval="DayMonthYear" DefaultId="DataItem0" />
+      </DataItems>
+      <Dimension DefaultId="DataItem0" />
+    </DateFilter>
+    <Chart ComponentName="chartDashboardItem1" Name="ITBI por Ano" DataSource="sqlDataSource1" DataMember="CustomSqlQuery">
+      <DataItems>
+        <Measure DataMember="valor" DefaultId="DataItem0" />
+        <Dimension DataMember="datacredito" DefaultId="DataItem2" />
+        <Dimension DataMember="tributo" DefaultId="DataItem1" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem2" />
+      </SeriesDimensions>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Painel 1">
+          <Series>
+            <Simple>
+              <Value DefaultId="DataItem0" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+    </Chart>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutGroup Orientation="Vertical">
+        <LayoutItem DashboardItem="dateFilterDashboardItem1" />
+        <LayoutGroup>
+          <LayoutItem DashboardItem="pivotDashboardItem1" />
+          <LayoutItem DashboardItem="chartDashboardItem1" />
+        </LayoutGroup>
+      </LayoutGroup>
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

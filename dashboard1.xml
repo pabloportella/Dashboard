@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard CurrencyCulture="pt-BR">
+  <Title Text="Arrecadação Divida Ativa" />
+  <DataSources>
+    <SqlDataSource Name="E&amp;L TRB" ComponentName="sqlDataSource1" DataProcessingMode="Client">
+      <Connection Name="connection" ConnectionString="XpoProvider=Postgres;Server=192.168.7.7;Port=5432;Database=eldados_tribu;User Id=postgres;Password=PnCdEL" />
+      <Query Type="CustomSqlQuery" Name="CustomSqlQuery">
+        <Sql>select 
+"vw_tr_arrecacao_divida_ano"."ano",
+TO_ASCII("vw_tr_arrecacao_divida_ano"."tributo") AS "tributo",
+"vw_tr_arrecacao_divida_ano"."arrecado" 
+from "vw_tr_arrecacao_divida_ano" "vw_tr_arrecacao_divida_ano"
+order by "vw_tr_arrecacao_divida_ano"."ano"</Sql>
+      </Query>
+      <Query Type="CustomSqlQuery" Name="CustomSqlQuery_1">
+        <Sql>select "vw_tr_arrecacao_divida_periodo"."periodo",TO_ASCII("vw_tr_arrecacao_divida_periodo"."tributo") as "tributo","vw_tr_arrecacao_divida_periodo"."arrecado" from "vw_tr_arrecacao_divida_periodo" "vw_tr_arrecacao_divida_periodo"</Sql>
+      </Query>
+      <ResultSchema>
+        <DataSet Name="E&amp;L TRB">
+          <View Name="CustomSqlQuery">
+            <Field Name="ano" Type="String" />
+            <Field Name="tributo" Type="String" />
+            <Field Name="arrecado" Type="Decimal" />
+          </View>
+          <View Name="CustomSqlQuery_1">
+            <Field Name="periodo" Type="DateTime" />
+            <Field Name="tributo" Type="String" />
+            <Field Name="arrecado" Type="Decimal" />
+          </View>
+        </DataSet>
+      </ResultSchema>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <Pie ComponentName="pieDashboardItem1" Name="Arrecadado Divida Ativa 2020" DataSource="sqlDataSource1" DataMember="CustomSqlQuery" FilterString="[DataItem2] = '2020'" PieType="Donut" LabelContentType="ArgumentValueAndPercent" ShowPieCaptions="false">
+      <DataItems>
+        <Measure DataMember="arrecado" DefaultId="DataItem0" />
+        <Dimension DataMember="tributo" DefaultId="DataItem1" />
+        <Dimension DataMember="ano" DefaultId="DataItem2" />
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+        <Argument DefaultId="DataItem2" />
+      </Arguments>
+      <Values>
+        <Value DefaultId="DataItem0" />
+      </Values>
+    </Pie>
+    <Gauge ComponentName="gaugeDashboardItem1" Name="Indicadores de Arrecadação de Divida Ativa por Ano" DataSource="sqlDataSource1" DataMember="CustomSqlQuery" FilterString="[DataItem1] &gt;= '2015'">
+      <DataItems>
+        <Measure DataMember="arrecado" DefaultId="DataItem0" />
+        <Dimension DataMember="ano" DefaultId="DataItem1" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem1" />
+      </SeriesDimensions>
+      <GaugeElement>
+        <ActualValue DefaultId="DataItem0" />
+        <AbsoluteVariationNumericFormat />
+        <PercentVariationNumericFormat />
+        <PercentOfTargetNumericFormat />
+      </GaugeElement>
+    </Gauge>
+    <Pivot ComponentName="pivotDashboardItem1" Name="Arrecadação de Divida Por Tributo" DataSource="sqlDataSource1" DataMember="CustomSqlQuery_1" FilterString="[DataItem1] &gt;= 2010">
+      <InteractivityOptions IgnoreMasterFilters="true" />
+      <DataItems>
+        <Dimension DataMember="tributo" DefaultId="DataItem0" />
+        <Dimension DataMember="periodo" DefaultId="DataItem1" />
+        <Measure DataMember="arrecado" DefaultId="DataItem2" />
+        <Measure DataMember="arrecado" DefaultId="DataItem3" />
+        <Dimension DataMember="tributo" DefaultId="DataItem4" />
+        <Dimension DataMember="periodo" DefaultId="DataItem5" />
+      </DataItems>
+      <HiddenDimensions>
+        <Dimension DefaultId="DataItem0" />
+        <Dimension DefaultId="DataItem1" />
+      </HiddenDimensions>
+      <HiddenMeasures>
+        <Measure DefaultId="DataItem2" />
+      </HiddenMeasures>
+      <Columns>
+        <Column DefaultId="DataItem4" />
+      </Columns>
+      <Rows>
+        <Row DefaultId="DataItem5" />
+      </Rows>
+      <Values>
+        <Value DefaultId="DataItem3" />
+      </Values>
+    </Pivot>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutGroup Orientation="Vertical">
+        <LayoutGroup>
+          <LayoutItem DashboardItem="pieDashboardItem1" Weight="1.2020147459961652" />
+          <LayoutItem DashboardItem="gaugeDashboardItem1" Weight="0.7979852540038348" />
+        </LayoutGroup>
+        <LayoutItem DashboardItem="pivotDashboardItem1" />
+      </LayoutGroup>
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

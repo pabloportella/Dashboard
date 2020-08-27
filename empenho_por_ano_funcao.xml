@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard CurrencyCulture="pt-BR">
+  <Title Text="Empenhos por Função" />
+  <DataSources>
+    <SqlDataSource Name="E&amp;L CPE MSSQL" ComponentName="sqlDataSource1" DataProcessingMode="Client">
+      <Connection Name="connection" ProviderKey="MSSqlServer">
+        <Parameters>
+          <Parameter Name="server" Value="192.168.7.7" />
+          <Parameter Name="database" Value="CONT_RJ_NOVA_FRIBURGO" />
+          <Parameter Name="useIntegratedSecurity" Value="False" />
+          <Parameter Name="read only" Value="1" />
+          <Parameter Name="generateConnectionHelper" Value="false" />
+          <Parameter Name="userid" Value="sa" />
+          <Parameter Name="password" Value="cidadao" />
+        </Parameters>
+      </Connection>
+      <Query Type="SelectQuery" Name="VW_PORTAL_CPE_DESPESA">
+        <Tables>
+          <Table Name="VW_PORTAL_CPE_DESPESA" />
+        </Tables>
+        <Columns>
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="SBL_FASE" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="ANO_DOCUMENTO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="NOM_FILIAL" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_FUNCAO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_SUBFUNCAO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="VLR_DOCUMENTO" />
+        </Columns>
+        <Sorting>
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="SBL_FASE" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="ANO_DOCUMENTO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="NOM_FILIAL" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_FUNCAO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_SUBFUNCAO" />
+        </Sorting>
+        <Filter>[VW_PORTAL_CPE_DESPESA.SBL_FASE] = '10'</Filter>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Parameters>
+    <Parameter Name="PORTAL_ID" Type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Value="1929" Visible="false" />
+  </Parameters>
+  <Items>
+    <Chart ComponentName="chartDashboardItem2" Name="Total de Empenhos Realizados por Exercício" DataSource="sqlDataSource1" DataMember="VW_PORTAL_CPE_DESPESA">
+      <InteractivityOptions MasterFilterMode="Single" />
+      <DataItems>
+        <Measure DataMember="VLR_DOCUMENTO" DefaultId="DataItem0">
+          <NumericFormat FormatType="Currency" />
+        </Measure>
+        <Dimension DataMember="ANO_DOCUMENTO" Name="Exercício" DefaultId="DataItem1">
+          <NumericFormat FormatType="Number" Precision="0" Unit="Ones" />
+        </Dimension>
+        <Dimension DataMember="NOM_FILIAL" Name="Entidade" SortOrder="Descending" SortByMeasure="DataItem0" DefaultId="DataItem2" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem2" />
+      </SeriesDimensions>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Painel 1">
+          <Series>
+            <Simple Name="Total Empenhado">
+              <Value DefaultId="DataItem0" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+      <ChartLegend OutsidePosition="TopLeftHorizontal" />
+      <AxisX TitleVisible="true" />
+    </Chart>
+    <Chart ComponentName="chartDashboardItem1" Name="Totao Empenhado por Função em um Exercício" DataSource="sqlDataSource1" DataMember="VW_PORTAL_CPE_DESPESA">
+      <InteractivityOptions IsDrillDownEnabled="true" />
+      <DataItems>
+        <Measure DataMember="VLR_DOCUMENTO" DefaultId="DataItem0" />
+        <Dimension DataMember="CNO_FUNCAO" Name="Função" SortOrder="Descending" ColoringMode="Hue" SortByMeasure="DataItem0" DefaultId="DataItem1" />
+        <Dimension DataMember="CNO_SUBFUNCAO" Name="Subfunção" SortOrder="Descending" ColoringMode="Hue" SortByMeasure="DataItem0" DefaultId="DataItem2" />
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+        <Argument DefaultId="DataItem2" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Painel 1">
+          <Series>
+            <Simple Name="Valor Empenhado">
+              <Value DefaultId="DataItem0" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+      <ChartLegend Visible="false" OutsidePosition="TopLeftHorizontal" />
+      <AxisX TitleVisible="true" />
+    </Chart>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup Orientation="Vertical">
+      <LayoutItem DashboardItem="chartDashboardItem2" Weight="50" />
+      <LayoutItem DashboardItem="chartDashboardItem1" Weight="50" />
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

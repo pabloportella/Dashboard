@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard CurrencyCulture="pt-BR">
+  <Title Text="Despesas Anuais Liquidadas" />
+  <DataSources>
+    <SqlDataSource Name="E&amp;L CPE MSSQL" ComponentName="sqlDataSource1" DataProcessingMode="Client">
+      <Connection Name="connection" ProviderKey="MSSqlServer">
+        <Parameters>
+          <Parameter Name="server" Value="192.168.7.7" />
+          <Parameter Name="database" Value="CONT_RJ_NOVA_FRIBURGO" />
+          <Parameter Name="useIntegratedSecurity" Value="False" />
+          <Parameter Name="read only" Value="1" />
+          <Parameter Name="generateConnectionHelper" Value="false" />
+          <Parameter Name="userid" Value="sa" />
+          <Parameter Name="password" Value="cidadao" />
+        </Parameters>
+      </Connection>
+      <Query Type="SelectQuery" Name="VW_PORTAL_CPE_DESPESA">
+        <Tables>
+          <Table Name="VW_PORTAL_CPE_DESPESA" />
+        </Tables>
+        <Columns>
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="SBL_FASE" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="DAT_DOCUMENTO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_FUNCAO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_SUBFUNCAO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_PROGRAMA" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_ATIVIDADE_PROJETO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="VLR_DOCUMENTO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="VLR_DOCUMENTO_DESCONTO" />
+        </Columns>
+        <Sorting>
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="SBL_FASE" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="DAT_DOCUMENTO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_FUNCAO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_SUBFUNCAO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_PROGRAMA" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_ATIVIDADE_PROJETO" />
+        </Sorting>
+        <Filter>[VW_PORTAL_CPE_DESPESA.SBL_FASE] = '20'</Filter>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <RangeFilter ComponentName="rangeFilterDashboardItem1" Name="Filtro de Faixa 1" DataSource="sqlDataSource1" DataMember="VW_PORTAL_CPE_DESPESA" IsMasterFilterCrossDataSource="true">
+      <DataItems>
+        <Measure DataMember="VLR_DOCUMENTO" DefaultId="DataItem0" />
+        <Dimension DataMember="DAT_DOCUMENTO" DateTimeGroupInterval="MonthYear" DefaultId="DataItem1" />
+      </DataItems>
+      <Argument DefaultId="DataItem1" />
+      <Series>
+        <Simple SeriesType="Line">
+          <Value DefaultId="DataItem0" />
+        </Simple>
+      </Series>
+    </RangeFilter>
+    <Chart ComponentName="chartDashboardItem1" Name="Liquidações" DataSource="sqlDataSource1" DataMember="VW_PORTAL_CPE_DESPESA">
+      <ColoringOptions MeasuresColoringMode="Hue" />
+      <InteractivityOptions IsDrillDownEnabled="true" />
+      <DataItems>
+        <Measure DataMember="VLR_DOCUMENTO" DefaultId="DataItem0">
+          <NumericFormat FormatType="Currency" />
+        </Measure>
+        <Dimension DataMember="CNO_FUNCAO" Name="Por Função" SortOrder="Descending" ColoringMode="Hue" SortByMeasure="DataItem0" DefaultId="DataItem1" />
+        <Dimension DataMember="CNO_SUBFUNCAO" Name="Por Subfunção" SortOrder="Descending" ColoringMode="Hue" SortByMeasure="DataItem0" DefaultId="DataItem2" />
+        <Dimension DataMember="CNO_PROGRAMA" Name="Por Programa" SortOrder="Descending" ColoringMode="Hue" SortByMeasure="DataItem0" DefaultId="DataItem3" />
+        <Dimension DataMember="CNO_ATIVIDADE_PROJETO" Name="Por Atividade/Projeto" SortOrder="Descending" ColoringMode="Hue" SortByMeasure="DataItem0" DefaultId="DataItem4" />
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+        <Argument DefaultId="DataItem2" />
+        <Argument DefaultId="DataItem3" />
+        <Argument DefaultId="DataItem4" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Painel 1">
+          <Series>
+            <Simple Name="Valor Liquidado">
+              <Value DefaultId="DataItem0" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+    </Chart>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup Orientation="Vertical" Weight="100">
+      <LayoutItem DashboardItem="rangeFilterDashboardItem1" Weight="25.180722891566266" />
+      <LayoutItem DashboardItem="chartDashboardItem1" Weight="74.819277108433738" />
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

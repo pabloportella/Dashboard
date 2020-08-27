@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="Arrecadação Geral" />
+  <DataSources>
+    <SqlDataSource Name="E&amp;L TRB" ComponentName="sqlDataSource1" DataProcessingMode="Client">
+      <Connection Name="connection" ConnectionString="XpoProvider=Postgres;Server=192.168.7.7;Port=5432;Database=eldados_tribu;User Id=postgres;Password=PnCdEL" />
+      <Query Type="CustomSqlQuery" Name="CustomSqlQuery">
+        <Sql>select 
+"vw_tr_arrecacao_geral_perido"."data_credito",
+cast("vw_tr_arrecacao_geral_perido"."arrecadado" as numeric(25,2)) as "arrecadado",
+TO_ASCII("vw_tr_arrecacao_geral_perido"."tributo") AS "tributo"
+from "vw_tr_arrecacao_geral_perido" "vw_tr_arrecacao_geral_perido"</Sql>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <TreeView ComponentName="treeViewDashboardItem1" Name="Impostos por Ano" DataSource="sqlDataSource1" DataMember="CustomSqlQuery" FilterString="[DataItem0] &gt;= 2000">
+      <DataItems>
+        <Dimension DataMember="tributo" DefaultId="DataItem1" />
+        <Dimension DataMember="data_credito" DefaultId="DataItem0" />
+      </DataItems>
+      <FilterDimensions>
+        <Dimension DefaultId="DataItem1" />
+        <Dimension DefaultId="DataItem0" />
+      </FilterDimensions>
+    </TreeView>
+    <Pie ComponentName="pieDashboardItem1" Name="Impostos" DataSource="sqlDataSource1" DataMember="CustomSqlQuery" FilterString="[DataItem0] &gt;= ?" PieType="Donut" LabelContentType="ArgumentValueAndPercent" ShowPieCaptions="false">
+      <DataItems>
+        <Measure DataMember="arrecadado" DefaultId="DataItem1" />
+        <Dimension DataMember="data_credito" DefaultId="DataItem0" />
+        <Dimension DataMember="tributo" DefaultId="DataItem2" />
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem0" />
+        <Argument DefaultId="DataItem2" />
+      </Arguments>
+      <Values>
+        <Value DefaultId="DataItem1" />
+      </Values>
+    </Pie>
+    <ComboBox ComponentName="comboBoxDashboardItem1" Name="Caixa de combinação 1" DataSource="sqlDataSource1" DataMember="CustomSqlQuery" />
+    <Chart ComponentName="chartDashboardItem1" Name="Impostos Gráfico" DataSource="sqlDataSource1" DataMember="CustomSqlQuery" FilterString="[DataItem1] &gt;= 2000">
+      <DataItems>
+        <Measure DataMember="arrecadado" DefaultId="DataItem0" />
+        <Dimension DataMember="data_credito" DefaultId="DataItem1" />
+        <Dimension DataMember="tributo" DefaultId="DataItem2" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem2" />
+      </SeriesDimensions>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Painel 1">
+          <Series>
+            <Simple>
+              <Value DefaultId="DataItem0" />
+              <PointLabelOptions ContentType="Value" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+      <AxisX EnableZooming="true" />
+    </Chart>
+    <ComboBox ComponentName="comboBoxDashboardItem2" Name="Ano" DataSource="sqlDataSource1" DataMember="CustomSqlQuery" FilterString="[DataItem0] &gt;= 2000">
+      <DataItems>
+        <Dimension DataMember="data_credito" DefaultId="DataItem0" />
+      </DataItems>
+      <FilterDimensions>
+        <Dimension DefaultId="DataItem0" />
+      </FilterDimensions>
+    </ComboBox>
+    <Gauge ComponentName="gaugeDashboardItem1" Name="TOP 5 ARRECADAÇÃO" DataSource="sqlDataSource1" DataMember="CustomSqlQuery" FilterString="[DataItem2] &gt;= 2000">
+      <DataItems>
+        <Measure DataMember="arrecadado" DefaultId="DataItem0" />
+        <Dimension DataMember="data_credito" TopNEnabled="true" TopNMeasure="DataItem0" DefaultId="DataItem2" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem2" />
+      </SeriesDimensions>
+      <GaugeElement>
+        <ActualValue DefaultId="DataItem0" />
+        <AbsoluteVariationNumericFormat />
+        <PercentVariationNumericFormat />
+        <PercentOfTargetNumericFormat />
+      </GaugeElement>
+    </Gauge>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutGroup>
+        <LayoutGroup Orientation="Vertical" Weight="0.46148211209883372">
+          <LayoutItem DashboardItem="comboBoxDashboardItem2" Weight="1.0021461028885712" />
+          <LayoutItem DashboardItem="treeViewDashboardItem1" Weight="0.46148211209883372" />
+        </LayoutGroup>
+        <LayoutGroup Orientation="Vertical" Weight="1.5395078104892197">
+          <LayoutItem DashboardItem="gaugeDashboardItem1" Weight="1.5385178879011661" />
+          <LayoutItem DashboardItem="pieDashboardItem1" Weight="1.5385178879011661" />
+          <LayoutItem DashboardItem="chartDashboardItem1" Weight="1.5385178879011661" />
+        </LayoutGroup>
+      </LayoutGroup>
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

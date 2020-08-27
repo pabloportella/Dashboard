@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="Arrecadação ISSQN" />
+  <DataSources>
+    <SqlDataSource Name="E&amp;L TRB" ComponentName="sqlDataSource1" DataProcessingMode="Client">
+      <Connection Name="connection" ConnectionString="XpoProvider=Postgres;Server=192.168.7.7;Port=5432;Database=eldados_tribu;User Id=postgres;Password=PnCdEL" />
+      <Query Type="CustomSqlQuery" Name="CustomSqlQuery">
+        <Sql>select 
+"vw_tr_arrecacao_issqn_ano"."ano",
+TO_ASCII("vw_tr_arrecacao_issqn_ano"."tributo") as "tributo",
+"vw_tr_arrecacao_issqn_ano"."arrecadado"
+from "vw_tr_arrecacao_issqn_ano" "vw_tr_arrecacao_issqn_ano"
+order by "vw_tr_arrecacao_issqn_ano"."ano"</Sql>
+      </Query>
+      <Query Type="CustomSqlQuery" Name="CustomSqlQuery_1">
+        <Sql>select 
+"vw_tr_arrecacao_issqn_perido"."datacred_lanme",
+TO_ASCII("vw_tr_arrecacao_issqn_perido"."tributo") as tributo,
+"vw_tr_arrecacao_issqn_perido"."arrecadado" 
+from "vw_tr_arrecacao_issqn_perido" "vw_tr_arrecacao_issqn_perido"</Sql>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <Chart ComponentName="chartDashboardItem1" Name="ISSQN" DataSource="sqlDataSource1" DataMember="CustomSqlQuery" FilterString="[DataItem2] &gt;= 2005 And [DataItem2] &lt;= 2020">
+      <InteractivityOptions IsDrillDownEnabled="true" />
+      <DataItems>
+        <Measure DataMember="arrecadado" DefaultId="DataItem0" />
+        <Measure DataMember="ano" SummaryType="Count" DefaultId="DataItem1" />
+        <Dimension DataMember="ano" ColoringMode="Hue" DefaultId="DataItem2" />
+      </DataItems>
+      <HiddenMeasures>
+        <Measure DefaultId="DataItem1" />
+      </HiddenMeasures>
+      <Arguments>
+        <Argument DefaultId="DataItem2" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Painel 1">
+          <Series>
+            <Simple Name="VALOR ISSQN (ANO)">
+              <Value DefaultId="DataItem0" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+      <ChartLegend OutsidePosition="BottomLeftHorizontal" />
+      <AxisX EnableZooming="true" />
+    </Chart>
+    <Gauge ComponentName="gaugeDashboardItem1" Name="Indicadores ISSQN" DataSource="sqlDataSource1" DataMember="CustomSqlQuery_1" FilterString="[DataItem0] &gt;= 2005 And [DataItem0] &lt;= 2020" ViewType="LinearHorizontal">
+      <DataItems>
+        <Dimension DataMember="datacred_lanme" DefaultId="DataItem0" />
+        <Measure DataMember="arrecadado" DefaultId="DataItem1" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem0" />
+      </SeriesDimensions>
+      <GaugeElement>
+        <ActualValue DefaultId="DataItem1" />
+        <AbsoluteVariationNumericFormat />
+        <PercentVariationNumericFormat />
+        <PercentOfTargetNumericFormat />
+      </GaugeElement>
+    </Gauge>
+    <DateFilter ComponentName="dateFilterDashboardItem1" Name="Período" DataSource="sqlDataSource1" DataMember="CustomSqlQuery_1" FilterString="[DataItem0] &gt;= #2005-01-01# And [DataItem0] &lt;= #2020-12-31#" ArrangementMode="Horizontal">
+      <DataItems>
+        <Dimension DataMember="datacred_lanme" DateTimeGroupInterval="DayMonthYear" DefaultId="DataItem0" />
+        <Dimension DataMember="datacred_lanme" DefaultId="DataItem1" />
+      </DataItems>
+      <HiddenDimensions>
+        <Dimension DefaultId="DataItem1" />
+      </HiddenDimensions>
+      <Dimension DefaultId="DataItem0" />
+    </DateFilter>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutGroup Orientation="Vertical">
+        <LayoutItem DashboardItem="chartDashboardItem1" Weight="0.9956392537803852" />
+        <LayoutGroup Weight="1.0043607462196147">
+          <LayoutItem DashboardItem="dateFilterDashboardItem1" Weight="0.2783464333089154" />
+          <LayoutItem DashboardItem="gaugeDashboardItem1" Weight="1.0043607462196147" />
+        </LayoutGroup>
+      </LayoutGroup>
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

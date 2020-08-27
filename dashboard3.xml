@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="Arrecadação Taxas" />
+  <DataSources>
+    <SqlDataSource Name="E&amp;L TRB" ComponentName="sqlDataSource1" DataProcessingMode="Client">
+      <Connection Name="connection" ConnectionString="XpoProvider=Postgres;Server=192.168.7.7;Port=5432;Database=eldados_tribu;User Id=postgres;Password=PnCdEL" />
+      <Query Type="CustomSqlQuery" Name="CustomSqlQuery">
+        <Sql>select 
+CAST("vw_tr_arrecacao_taxas_ano"."valor" AS NUMERIC(25,2)) as "valor",
+"vw_tr_arrecacao_taxas_ano"."ano",
+TO_ASCII("vw_tr_arrecacao_taxas_ano"."tributo") as "tributo" 
+from "vw_tr_arrecacao_taxas_ano" "vw_tr_arrecacao_taxas_ano"
+order by "vw_tr_arrecacao_taxas_ano"."ano"</Sql>
+      </Query>
+      <Query Type="CustomSqlQuery" Name="CustomSqlQuery_1">
+        <Sql>select 
+"vw_tr_arrecacao_taxas_perido"."datacredito",
+"vw_tr_arrecacao_taxas_perido"."valor",
+TO_ASCII("vw_tr_arrecacao_taxas_perido"."tributo") AS "tributo" 
+from "vw_tr_arrecacao_taxas_perido" "vw_tr_arrecacao_taxas_perido"</Sql>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <Pie ComponentName="pieDashboardItem1" Name="Arrecadação Taxas" DataSource="sqlDataSource1" DataMember="CustomSqlQuery" FilterString="[DataItem1] &gt;= '2016'" IsMasterFilterCrossDataSource="true" LabelContentType="ArgumentAndValue" TooltipContentType="None" ContentArrangementMode="FixedColumnCount" ContentLineCount="5">
+      <InteractivityOptions MasterFilterMode="Multiple" TargetDimensions="Series" />
+      <DataItems>
+        <Measure DataMember="valor" DefaultId="DataItem2" />
+        <Dimension DataMember="tributo" DefaultId="DataItem0" />
+        <Dimension DataMember="ano" TopNCount="10" TopNMeasure="DataItem2" DefaultId="DataItem1" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem1" />
+      </SeriesDimensions>
+      <Arguments>
+        <Argument DefaultId="DataItem0" />
+      </Arguments>
+      <Values>
+        <Value DefaultId="DataItem2" />
+      </Values>
+    </Pie>
+    <Chart ComponentName="chartDashboardItem1" Name="Arrecadação de Taxas por Ano" DataSource="sqlDataSource1" DataMember="CustomSqlQuery" FilterString="[DataItem1] &gt;= 2016">
+      <ColoringOptions UseGlobalColors="false" />
+      <DataItems>
+        <Measure DataMember="valor" DefaultId="DataItem0" />
+        <Dimension DataMember="ano" DefaultId="DataItem1" />
+        <Dimension DataMember="tributo" TopNEnabled="true" TopNCount="30" TopNMeasure="DataItem0" DefaultId="DataItem2" />
+      </DataItems>
+      <SeriesDimensions>
+        <SeriesDimension DefaultId="DataItem2" />
+      </SeriesDimensions>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Painel 1">
+          <AxisY>
+            <NumericFormat FormatType="Currency" CurrencyCultureName="es-BR" />
+          </AxisY>
+          <Series>
+            <Simple Name="Valor">
+              <Value DefaultId="DataItem0" />
+              <PointLabelOptions ContentType="Value" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+      <AxisX TitleVisible="true" />
+    </Chart>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutGroup Orientation="Vertical">
+        <LayoutItem DashboardItem="pieDashboardItem1" Weight="0.7797823159094629" />
+        <LayoutItem DashboardItem="chartDashboardItem1" Weight="1.220217684090537" />
+      </LayoutGroup>
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

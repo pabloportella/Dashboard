@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard CurrencyCulture="pt-BR">
+  <Title Text="Programas, Projetos e Ações" />
+  <DataSources>
+    <SqlDataSource Name="E&amp;L CPE MSSQL" ComponentName="sqlDataSource1" DataProcessingMode="Client">
+      <Connection Name="connection" ProviderKey="MSSqlServer">
+        <Parameters>
+          <Parameter Name="server" Value="192.168.7.7" />
+          <Parameter Name="database" Value="CONT_RJ_NOVA_FRIBURGO" />
+          <Parameter Name="useIntegratedSecurity" Value="False" />
+          <Parameter Name="read only" Value="1" />
+          <Parameter Name="generateConnectionHelper" Value="false" />
+          <Parameter Name="userid" Value="sa" />
+          <Parameter Name="password" Value="cidadao" />
+        </Parameters>
+      </Connection>
+      <Query Type="SelectQuery" Name="VW_PORTAL_CPE_DESPESA">
+        <Tables>
+          <Table Name="VW_PORTAL_CPE_DESPESA" />
+        </Tables>
+        <Columns>
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="ANO_DOCUMENTO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="MES_DOCUMENTO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="NOM_FILIAL" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_ORGAO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_UNIDADE_ORCAMENTARIA" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_PROGRAMA" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_ATIVIDADE_PROJETO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="VLR_DOCUMENTO" Aggregate="Sum" Alias="VLR_PAGO" />
+        </Columns>
+        <Sorting>
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="ANO_DOCUMENTO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="MES_DOCUMENTO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="NOM_FILIAL" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_ORGAO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_UNIDADE_ORCAMENTARIA" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_PROGRAMA" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_ATIVIDADE_PROJETO" />
+        </Sorting>
+        <Grouping>
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="NOM_FILIAL" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="ANO_DOCUMENTO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="MES_DOCUMENTO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_ORGAO" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_UNIDADE_ORCAMENTARIA" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_PROGRAMA" />
+          <Column Table="VW_PORTAL_CPE_DESPESA" Name="CNO_ATIVIDADE_PROJETO" />
+        </Grouping>
+        <Filter>[VW_PORTAL_CPE_DESPESA.SBL_FASE] = '30'</Filter>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Parameters>
+    <Parameter Name="PORTAL_ID" Type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Value="1929" Visible="false" />
+  </Parameters>
+  <Items>
+    <Chart ComponentName="chartDashboardItem1" Name="Programas/Projetos por Órgão" Rotated="true">
+      <ColoringOptions UseGlobalColors="false" />
+      <InteractivityOptions MasterFilterMode="Single" />
+      <AxisX TitleVisible="true" />
+    </Chart>
+    <Pie ComponentName="pieDashboardItem1" Name="Ações do Programa/Projeto" PieType="Donut" LabelContentType="ArgumentAndValue">
+      <InteractivityOptions IsDrillDownEnabled="true" />
+    </Pie>
+    <Chart ComponentName="chartDashboardItem2" Name="Entidades" DataSource="sqlDataSource1" DataMember="VW_PORTAL_CPE_DESPESA">
+      <InteractivityOptions MasterFilterMode="Multiple" />
+      <DataItems>
+        <Measure DataMember="VLR_PAGO" DefaultId="DataItem0">
+          <NumericFormat FormatType="Currency" />
+        </Measure>
+        <Dimension DataMember="NOM_FILIAL" Name="Entidade" SortOrder="Descending" ColoringMode="Hue" SortByMeasure="DataItem0" DefaultId="DataItem1" />
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Painel 1">
+          <Series>
+            <Simple Name="Valor Pago">
+              <Value DefaultId="DataItem0" />
+              <PointLabelOptions ContentType="Argument" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+    </Chart>
+    <Chart ComponentName="chartDashboardItem3" Name="Funções/Ações" DataSource="sqlDataSource1" DataMember="VW_PORTAL_CPE_DESPESA">
+      <InteractivityOptions IsDrillDownEnabled="true" />
+      <DataItems>
+        <Dimension DataMember="CNO_PROGRAMA" Name="Programa" SortOrder="Descending" ColoringMode="Hue" SortByMeasure="DataItem2" DefaultId="DataItem0" />
+        <Dimension DataMember="CNO_ATIVIDADE_PROJETO" Name="Acão" SortOrder="Descending" ColoringMode="Hue" SortByMeasure="DataItem2" DefaultId="DataItem1" />
+        <Measure DataMember="VLR_PAGO" Name="Valor por Ação" DefaultId="DataItem2">
+          <NumericFormat FormatType="Currency" />
+        </Measure>
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem0" />
+        <Argument DefaultId="DataItem1" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Painel 1">
+          <Series>
+            <Simple>
+              <Value DefaultId="DataItem2" />
+              <PointLabelOptions ContentType="Argument, Value" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+    </Chart>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup Orientation="Vertical">
+      <LayoutItem DashboardItem="chartDashboardItem2" Weight="93.840579710144922" />
+      <LayoutItem DashboardItem="chartDashboardItem3" Weight="93.840579710144922" />
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

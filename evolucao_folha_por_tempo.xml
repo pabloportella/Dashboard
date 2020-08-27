@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard CurrencyCulture="pt-BR">
+  <Title Text="Evolução do Gasto com Pessoal" />
+  <DataSources>
+    <SqlDataSource Name="E&amp;L RHF Postgres" ComponentName="sqlDataSource1" DataProcessingMode="Client">
+      <Connection Name="192.168.7.7_eldados_folha_Connection" ProviderKey="Postgres">
+        <Parameters>
+          <Parameter Name="server" Value="192.168.7.7" />
+          <Parameter Name="database" Value="eldados_folha" />
+          <Parameter Name="read only" Value="1" />
+          <Parameter Name="generateConnectionHelper" Value="false" />
+          <Parameter Name="Port" Value="5432" />
+          <Parameter Name="userid" Value="postgres" />
+          <Parameter Name="password" Value="PnCdEL" />
+        </Parameters>
+      </Connection>
+      <Query Type="SelectQuery" Name="vw_fl_visao_func_remunera">
+        <Tables>
+          <Table Name="vw_fl_visao_func_remunera" />
+        </Tables>
+        <Columns>
+          <Column Table="vw_fl_visao_func_remunera" Name="nome_filial" />
+          <Column Table="vw_fl_visao_func_remunera" Name="ano" />
+          <Column Table="vw_fl_visao_func_remunera" Name="regime" />
+          <Column Table="vw_fl_visao_func_remunera" Name="nome_secre" />
+          <Column Table="vw_fl_visao_func_remunera" Name="nome_divisao" />
+          <Column Table="vw_fl_visao_func_remunera" Name="nome_secao" />
+        </Columns>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Parameters>
+    <Parameter Name="PORTAL_ID" Type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" Value="1929" Visible="false" />
+  </Parameters>
+  <Items>
+    <ComboBox ComponentName="comboBoxDashboardItem1" Name="Nome da Entidade" ShowAllValue="false" />
+    <Chart ComponentName="chartDashboardItem1" Name="Gasto Anual por Vínculo">
+      <ColoringOptions UseGlobalColors="false" />
+      <InteractivityOptions MasterFilterMode="Multiple" TargetDimensions="Points" />
+      <Panes>
+        <Pane Name="Painel 1" />
+      </Panes>
+    </Chart>
+    <Pie ComponentName="pieDashboardItem1" Name="Gasto por Secretarias" PieType="Donut">
+      <InteractivityOptions IsDrillDownEnabled="true" />
+    </Pie>
+    <Pie ComponentName="pieDashboardItem2" Name="Gasto por Seção" PieType="Donut" />
+  </Items>
+  <LayoutTree>
+    <LayoutGroup Orientation="Vertical">
+      <LayoutItem DashboardItem="comboBoxDashboardItem1" Weight="6.1594202898550723" />
+      <LayoutItem DashboardItem="chartDashboardItem1" Weight="44.565217391304351" />
+      <LayoutGroup Weight="49.275362318840578">
+        <LayoutItem DashboardItem="pieDashboardItem1" Weight="49.966420416386839" />
+        <LayoutItem DashboardItem="pieDashboardItem2" Weight="50.033579583613161" />
+      </LayoutGroup>
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>
